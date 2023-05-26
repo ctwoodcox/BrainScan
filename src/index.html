@@ -12,23 +12,18 @@
 
     <div class = "wrapper">
           <div class="controls">
-            <button id="start-button" class="_startBtn button">Start Game</button>
-            <button id="previous-score" class="_previousScore button">High Scores</button>
+            <button type="button" id="start-button" class="startBtn">Start Game</button>
           </div>
-        <div class = "quiz-container">
+        <div class="hide" id="quiz-container">
             <div class = "quiz-head">
-                <h1 class = "quiz-title">Welcome to BrainScan</h1>
+                <h1 class = "quiz-title">BrainScan (The Trivia Game)</h1>
                 <div class = "quiz-score flex">
                     <span id = "correct-score"></span>/<span id = "total-question"></span>
                 </div>
             </div>
             <div class = "quiz-body">
-                <h2 class = "quiz-question" id = "question"><!--What is the full form of HTTP? --></h2>
+                <h2 class = "quiz-question" id = "question"></h2>
                 <ul class = "quiz-options">
-                    <!-- <li>1. Hyper text transfer package</li>
-                    <li>2. Hyper text transfer protocol</li>
-                    <li>3. Hyphenation text test program</li>
-                    <li>4. None of the above</li> -->
                 </ul>
                 <div id = "result">
                 </div>
@@ -49,7 +44,7 @@
 </body>
 
 <footer>
-    <h3>* Created by UN2IVAL3D Designs Inc. 2021-2022 *</h3>
+    <h3>* Created by UN2IVAL3D Designs Inc. 2021-2023 *</h3>
 </footer>
 
 </html>

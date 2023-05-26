@@ -1,52 +1,51 @@
-const _startBtn = document.getElementById('start-button');
-const _previousScore = document.getElementById('previous-score');
-const _question = document.getElementById('question');
-const _options = document.querySelector('.quiz-options');
-const _checkBtn = document.getElementById('check-answer');
-const _playAgainBtn = document.getElementById('play-again');
-const _result = document.getElementById('result');
-const _correctScore = document.getElementById('correct-score');
-const _totalQuestion = document.getElementById('total-question');
+const startBtn = document.getElementById('start-button');
+const question = document.getElementById('question');
+const answerChoice = document.querySelector('.quiz-options');
+const checkBtn = document.getElementById('check-answer');
+const playAgainBtn = document.getElementById('play-again');
+const result = document.getElementById('result');
+const totalScore = document.getElementById('correct-score');
+const questionTotal = document.getElementById('total-question');
+const quizContainer = document.getElementById('quiz-container');
 
 let correctAnswer = "", correctScore = askedCount = 0, totalQuestion = 20;
 
-_startBtn.addEventListener('click', startQuiz);
+startBtn.addEventListener('click', startQuiz);
 
-// load question from API
+// load questions from API
 async function loadQuestion(){
     const APIUrl = 'https://opentdb.com/api.php?amount=20&type=multiple';
     const result = await fetch(`${APIUrl}`)
     const data = await result.json();
-    _result.innerHTML = "";
+    result.innerHTML = "";
     showQuestion(data.results[0]);
 }
 
 // event listeners
 function eventListeners(){
-    _checkBtn.addEventListener('click', checkAnswer);
-    _playAgainBtn.addEventListener('click', restartQuiz);
+    checkBtn.addEventListener('click', checkAnswer);
+    playAgainBtn.addEventListener('click', restartQuiz);
 }
 
 document.addEventListener('DOMContentLoaded', function(){
     loadQuestion();
     eventListeners();
-    _totalQuestion.textContent = totalQuestion;
-    _correctScore.textContent = correctScore;
+    questionTotal.textContent = totalQuestion;
+    totalScore.textContent = correctScore;
 });
 
 
 // display question and options
 function showQuestion(data){
-    _checkBtn.disabled = false;
+    checkBtn.disabled = false;
     correctAnswer = data.correct_answer;
     let incorrectAnswer = data.incorrect_answers;
     let optionsList = incorrectAnswer;
     optionsList.splice(Math.floor(Math.random() * (incorrectAnswer.length + 1)), 0, correctAnswer);
-    // console.log(correctAnswer);
-
     
-    _question.innerHTML = `${data.question} <br> <span class = "category"> ${data.category} </span>`;
-    _options.innerHTML = `
+    
+    question.innerHTML = `${data.question} <br> <span class = "category"> ${data.category} </span>`;
+    answerChoice.innerHTML = `
         ${optionsList.map((option, index) => `
             <li> ${index + 1}. <span>${option}</span> </li>
         `).join('')}
@@ -55,12 +54,12 @@ function showQuestion(data){
 }
 
 
-// options selection
+// Question selection
 function selectOption(){
-    _options.querySelectorAll('li').forEach(function(option){
+    answerChoice.querySelectorAll('li').forEach(function(option){
         option.addEventListener('click', function(){
-            if(_options.querySelector('.selected')){
-                const activeOption = _options.querySelector('.selected');
+            if(answerChoice.querySelector('.selected')){
+                const activeOption = answerChoice.querySelector('.selected');
                 activeOption.classList.remove('selected');
             }
             option.classList.add('selected');
@@ -68,31 +67,31 @@ function selectOption(){
     });
 }
 
-// answer checking
+// Answer checking
 function checkAnswer(){
-    _checkBtn.disabled = true;
-    if(_options.querySelector('.selected')){
-        let selectedAnswer = _options.querySelector('.selected span').textContent;
+    checkBtn.disabled = true;
+    if(answerChoice.querySelector('.selected')){
+        let selectedAnswer = answerChoice.querySelector('.selected span').textContent;
         if(selectedAnswer == HTMLDecode(correctAnswer)){
             correctScore++;
-            _result.innerHTML = `<p><i class = "fas fa-check"></i>Correct Answer!</p>`;
+            result.innerHTML = `<p><i class = "fas fa-check"></i>Correct Answer!</p>`;
         } else {
-            _result.innerHTML = `<p><i class = "fas fa-times"></i>Incorrect Answer!</p> <small><b>Correct Answer: </b>${correctAnswer}</small>`;
+            result.innerHTML = `<p><i class = "fas fa-times"></i>Incorrect Answer!</p> <small><b>Correct Answer: </b>${correctAnswer}</small>`;
         }
         checkCount();
     } else {
-        _result.innerHTML = `<p><i class = "fas fa-question"></i>Please select an option!</p>`;
-        _checkBtn.disabled = false;
+        result.innerHTML = `<p><i class = "fas fa-question"></i>Please select an option!</p>`;
+        checkBtn.disabled = false;
     }
 }
 
-// to convert html entities into normal text of correct answer if there is any
+// To convert html entities into normal text of correct answer if there is any
 function HTMLDecode(textString) {
     let doc = new DOMParser().parseFromString(textString, "text/html");
     return doc.documentElement.textContent;
 }
 
-
+// Final score
 function checkCount(){
     askedCount++;
     setCount();
@@ -102,9 +101,9 @@ function checkCount(){
         }, 5000);
 
 
-        _result.innerHTML += `<p>Your score was ${correctScore}.</p>`;
-        _playAgainBtn.style.display = "block";
-        _checkBtn.style.display = "none";
+        result.innerHTML += `<p>Your score was ${correctScore}.</p>`;
+        playAgainBtn.style.display = "block";
+        checkBtn.style.display = "none";
     } else {
         setTimeout(function(){
             loadQuestion();
@@ -112,23 +111,24 @@ function checkCount(){
     }
 }
 
+// Score Counter
 function setCount(){
-    _totalQuestion.textContent = totalQuestion;
-    _correctScore.textContent = correctScore;
+    questionTotal.textContent = totalQuestion;
+    totalScore.textContent = correctScore;
 }
 
 // Start Screen
 function startQuiz() {
-    _startBtn.classList.add('hide');
-    _previousScore.classList.add('hide');
-    _quizContainer.classList.remove('hide');
+    startBtn.classList.add('hide');
+    quizContainer.classList.remove('hide');
 };
 
+// Reset Quiz
 function restartQuiz(){
     correctScore = askedCount = 0;
-    _playAgainBtn.style.display = "none";
-    _checkBtn.style.display = "block";
-    _checkBtn.disabled = false;
+    playAgainBtn.style.display = "none";
+    checkBtn.style.display = "block";
+    checkBtn.disabled = false;
     setCount();
     loadQuestion();
 }
